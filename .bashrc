@@ -30,7 +30,7 @@ set_prompt () {
   #fi
   PS1+="$Reset\\u "
   # Print the working directory in blue
-  PS1+="$Blue\\w "
+  PS1+="$Blue\\W "
   # Print the git branch in yellow
   PS1+="$Yellow$(__git_ps1 '(%s)')"
   # Print the prompt marker in blue, and reset the text color to the default.
@@ -44,13 +44,27 @@ export GIT_PS1_SHOWDIRTYSTATE=1
 
 export CLICOLOR=1
 export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
+export EDITOR='mvim -f'
 
 alias sudo='sudo '
 alias aes256='gpg -c --cipher-algo AES256 '
 alias sshuni='ssh -c blowfish mchi2jd2@kilburn.cs.man.ac.uk'
 alias sshxuni='ssh -X -c blowfish mchi2jd2@kilburn.cs.man.ac.uk'
+alias c=clear
+alias g=git
+alias ldd='otool -L'
 
-mkcd() { mkdir $1; cd $1; }
+mkcd () { mkdir $1; cd $1; }
+
+bashman () { man bash | less -p "^       $1 "; }
 
 function scptouni () { scp -rc blowfish $1 mchi2jd2@kilburn.cs.man.ac.uk:$2; }
 function scpfromuni () { scp -rc blowfish mchi2jd2@kilburn.cs.man.ac.uk:$1 $2; }
+
+# -- BASH HISTORY --
+# Avoid duplicates
+export HISTCONTROL=ignoredups:erasedups  
+# When the shell exits, append to the history file instead of overwriting it
+shopt -s histappend
+# After each command, append to the history file and reread it
+export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}history -a; history -c; history -r"
