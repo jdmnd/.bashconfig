@@ -38,8 +38,10 @@ set_prompt () {
 }
 PROMPT_COMMAND='set_prompt'
 
-. ~/.git-prompt.sh
-. ~/.git-completion.bash
+. /usr/local/etc/bash_completion.d/git-prompt.sh
+. /usr/local/etc/bash_completion.d/git-completion.bash
+. /usr/local/etc/bash_completion.d/aws_bash_completer
+. /usr/local/etc/bash_completion.d/eb_completion.bash
 export GIT_PS1_SHOWDIRTYSTATE=1
 
 export CLICOLOR=1
@@ -53,6 +55,7 @@ alias sshxuni='ssh -X -c blowfish mchi2jd2@kilburn.cs.man.ac.uk'
 alias c=clear
 alias g=git
 alias ldd='otool -L'
+alias skim='open -a ~/Applications/Skim.app'
 
 mkcd () { mkdir $1; cd $1; }
 
@@ -60,11 +63,24 @@ bashman () { man bash | less -p "^       $1 "; }
 
 function scptouni () { scp -rc blowfish $1 mchi2jd2@kilburn.cs.man.ac.uk:$2; }
 function scpfromuni () { scp -rc blowfish mchi2jd2@kilburn.cs.man.ac.uk:$1 $2; }
+function unimount () {
+  cd;
+  umount unifs \
+    || umount -f unifs;
+  sshfs mchi2jd2@kilburn.cs.man.ac.uk:/home/mchi2jd2 unifs/ \
+    && echo 'success';
+}
 
 # -- BASH HISTORY --
 # Avoid duplicates
-export HISTCONTROL=ignoredups:erasedups  
+export HISTCONTROL=ignoredups:erasedups
 # When the shell exits, append to the history file instead of overwriting it
 shopt -s histappend
 # After each command, append to the history file and reread it
-export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}history -a; history -c; history -r"
+#export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}history -a; history -c; history -r"
+
+
+. $(brew --prefix)/etc/profile.d/z.sh
+
+# added by travis gem
+[ -f /Users/dmnd/.travis/travis.sh ] && source /Users/dmnd/.travis/travis.sh
